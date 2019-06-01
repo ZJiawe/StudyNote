@@ -238,6 +238,8 @@ kill -9 PID
 
 ## 4. Redis常用命令
 
+### 4.1 基本命令
+
 ```javascript
 // 查看所有 key
 keys *
@@ -264,5 +266,26 @@ select 1
 // 查看key 类型
 type key
 
+```
+
+### 4.2 String命令
+
+```javascript
+// 不存在赋值，存在取消此次操作
+setnx gradeName 1
+// 字符截取  下标从0开始
+getrange grade start end  
+// 取出旧值存入新值 若不存在键返回nil
+getset a 123
+// 获取长度
+strlen key
+// 删除命令
+del key
+// key值自增1 若是未有值则设为0再加1
+incr topic:num
+incrby topic:num 10 // 设定自加10
+// key值自减1
+decr topic:num
+decrby topic:num 10 // 设定自减10
 ```
 
