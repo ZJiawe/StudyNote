@@ -286,6 +286,9 @@ select 1
 
 // 查看key 类型
 type key
+
+// 清空缓存所有数据
+flushall
 ```
 
 ### 4.2 String命令
@@ -620,4 +623,30 @@ public  class RedisUtil {
 ```
 
 ## 8. Redis持久化
+
+### 8.1 RDB(redis database)
+
+![1559528263800](image/1559528263800.png)
+
+### 8.2 AOF(append only file)
+
+### 8.2.0 原理
+
+​    **aof原理实际上是保存每一次客户端对数据库操作的指令，当恢复时候重新执行指令，达到恢复效果**
+
+### 8.2.1 开启Aof
+
+**配置文件redis.conf**
+
+![1559528958160](image/1559528958160.png)
+
+### 8.2.2  出现故障回复AOF
+
+```
+redis-check-aof --fix appendonly.aof
+```
+
+### 8.2.3 总结
+
+![1559533774118](image/1559533774118.png)
 
