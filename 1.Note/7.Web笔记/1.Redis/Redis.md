@@ -713,3 +713,100 @@ watch key
 unwatch key
 ```
 
+## 10. 发布与订阅
+
+![1559737204444](image/1559737204444.png)
+
+```javascript
+// 订阅
+subscribe c1 c2 c3
+
+
+// 另一个客户端 推送
+publish c2 hello-redis    // 此时订阅客户端会立刻反馈
+
+```
+
+## 11. 主从复制读写分离
+
+### 11.1 测试
+
+更改redis配置文件模拟不同机子打开redis服务
+
+```javascript
+// 1.更改pidfile文件
+pidfile /var/run/redis_6380.pid
+
+// 2.更改ip端口
+port 6380
+
+// 3.更改logfile
+logfile "redis6380.log"
+
+// 4.更改dbfilename
+dbfilename dump6380.rdb
+
+```
+
+从Redis主机 连接主Redis主机
+
+```
+slaveof 主机 端口
+```
+
+### 11.2 要点
+
+1）、主机关机时候从机保存连接主机配置，连接状态为down。
+
+2）、无论从机何时连接主机都享有主机所有数据，但是不能编写，只能只读。
+
+3）、从机关机时候，重新启动默认不再与主机相连接，除非有配置编写。
+
+
+
+**薪火相传：**
+
+假设 3 台服务器 c1 c2  c3  :    c2 是 c1 的 slave  , c3是 c2  的 slave  
+
+**即c1,c2,c3共享数据，只是c3 向 c2 获取数据  ，c2 向 c1 获取数据**
+
+
+
+**反客为主：**
+
+假设 3 台服务器 c1 c2  c3  :    c2 是 c1 的 slave  , c3是 c2  的 slave  
+
+当c1 关闭时候，c2 可以执行命令
+
+```
+slaveof no one
+```
+
+则c2 成为新的主机，此时现在c3可以执行
+
+```
+// 连接c2
+slaveof c2 端口
+```
+
+ 此时 c2与 c3 重新建立主从库，与c1 没有关系了。如果 c1 添加数据 c2 c3均获取不了
+
+
+
+**哨兵模式：反客为主自动版本(监控主库状态)**
+
+简介：当主库崩掉，从库中投票挑选出一个当作主库。此时就算原来主库回来也变成slave
+
+```
+// 1. 创建配置文件 文件名一定是  sentinel.conf
+touch sentinel.conf
+
+// 2. 填写内容   sentinel.conf内容    数据库名  主机 端口 票数
+sentinel monitor host6379 127.0.0.1 6379 1
+
+// 3. 启动哨兵模式
+./bin/redis-sentinel ./sentinel.conf
+```
+
+
+
