@@ -808,5 +808,16 @@ sentinel monitor host6379 127.0.0.1 6379 1
 ./bin/redis-sentinel ./sentinel.conf
 ```
 
+## 12. Java实现一系列操作
 
+### 12.1 事物
 
+```java
+		Jedis jedis = RedisUtil.getResource();
+		Transaction transaction = jedis.multi();
+		transaction.set("k1", "v1");
+		transaction.set("k2", "v2");
+		transaction.set("k3", "v3");
+		// transaction.exec(); 执行
+		// transaction.discard(); 中断事物
+```
